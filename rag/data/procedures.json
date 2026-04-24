@@ -1,0 +1,126 @@
+[
+  {
+    "id": "scholarship-phd",
+    "title": "Apply for PhD Scholarship",
+    "steps": [
+      "Visit the PhD section on the main campus (Building A, Floor 2)",
+      "Check the scholarship noticeboard for available opportunities",
+      "Collect the scholarship application form from the secretary",
+      "Prepare required documents: national ID, academic transcripts, recommendation letters",
+      "Fill in the application form completely and accurately",
+      "Submit the completed form with all documents before the deadline",
+      "Await notification via your university email within 3 weeks"
+    ],
+    "tags": ["scholarship", "phd", "funding", "financial aid"],
+    "department": "PhD Office",
+    "contact": "phd-office@university.edu"
+  },
+  {
+    "id": "course-registration",
+    "title": "Course Registration",
+    "steps": [
+      "Log in to the student portal at portal.university.edu",
+      "Navigate to 'Academic Services' → 'Course Registration'",
+      "Select the current semester from the dropdown",
+      "Browse available courses and check for pre-requisites",
+      "Add desired courses to your basket (max 21 credit hours)",
+      "Confirm your selection and submit registration",
+      "Print or save your registration confirmation as proof"
+    ],
+    "tags": ["registration", "courses", "semester", "portal"],
+    "department": "Academic Affairs",
+    "contact": "academic@university.edu"
+  },
+  {
+    "id": "semester-deferral",
+    "title": "Defer a Semester",
+    "steps": [
+      "Obtain the deferral request form from the student affairs office",
+      "Fill in the form with your student ID, reason for deferral, and intended return date",
+      "Attach supporting documents (medical certificate, work contract, etc.) if applicable",
+      "Get your academic advisor's signature on the form",
+      "Submit the form to the student affairs office at least 2 weeks before semester start",
+      "Pay any applicable administration fees at the finance office",
+      "Receive a deferral confirmation letter — keep this for your records"
+    ],
+    "tags": ["deferral", "leave", "semester", "suspend"],
+    "department": "Student Affairs",
+    "contact": "student-affairs@university.edu"
+  },
+  {
+    "id": "transcript-request",
+    "title": "Request an Official Transcript",
+    "steps": [
+      "Go to the Registrar's Office (Admin Building, Ground Floor)",
+      "Fill in the transcript request form",
+      "Specify the number of copies required and the destination (e.g., employer, embassy)",
+      "Pay the transcript fee at the cashier window (receipt required)",
+      "Submit the form along with your payment receipt",
+      "Transcripts are ready for collection within 5 working days",
+      "Collect your sealed transcript(s) in person with your student ID"
+    ],
+    "tags": ["transcript", "documents", "official", "registrar"],
+    "department": "Registrar",
+    "contact": "registrar@university.edu"
+  },
+  {
+    "id": "exam-appeal",
+    "title": "Appeal an Exam Grade",
+    "steps": [
+      "Collect the grade appeal form from the examination office",
+      "Submit the form within 7 days of results publication",
+      "Pay the non-refundable appeal fee (refunded if appeal is successful)",
+      "Your paper will be re-marked by a different examiner",
+      "Appeal results are communicated within 2 weeks via email",
+      "If unsuccessful, you may escalate to the academic appeals board"
+    ],
+    "tags": ["exam", "grade", "appeal", "results"],
+    "department": "Examinations Office",
+    "contact": "exams@university.edu"
+  },
+  {
+    "id": "library-card",
+    "title": "Get a Library Card",
+    "steps": [
+      "Visit the main university library during opening hours (8am–8pm weekdays)",
+      "Bring your student ID and one passport-size photo",
+      "Fill in the library membership form at the help desk",
+      "Library card is issued on the spot at no charge",
+      "Card gives access to all campus libraries, digital resources, and inter-library loans"
+    ],
+    "tags": ["library", "card", "books", "resources", "access"],
+    "department": "University Library",
+    "contact": "library@university.edu"
+  },
+  {
+    "id": "graduation-application",
+    "title": "Apply for Graduation",
+    "steps": [
+      "Confirm you have completed all required credit hours with your academic advisor",
+      "Settle any outstanding fees or library fines",
+      "Submit the graduation application form via the student portal",
+      "The registrar will audit your academic record within 2 weeks",
+      "If approved, you will receive a clearance confirmation email",
+      "Collect your graduation gown and invitation from the student affairs office",
+      "Attend the graduation ceremony on the scheduled date"
+    ],
+    "tags": ["graduation", "ceremony", "degree", "clearance"],
+    "department": "Registrar & Student Affairs",
+    "contact": "graduation@university.edu"
+  },
+  {
+    "id": "student-id-replacement",
+    "title": "Replace Lost Student ID",
+    "steps": [
+      "Report the lost ID at the campus security office and get a reference number",
+      "Fill in the ID replacement form at the student affairs office",
+      "Pay the replacement fee at the finance office",
+      "Submit the form with your payment receipt and a passport photo",
+      "New ID is ready within 3 working days",
+      "Collect your new ID card from student affairs"
+    ],
+    "tags": ["id card", "lost", "replacement", "security"],
+    "department": "Student Affairs",
+    "contact": "student-affairs@university.edu"
+  }
+]
