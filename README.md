@@ -62,6 +62,12 @@ uvicorn main:app --reload  # runs on http://localhost:8000
 | `GROQ_CHAT_MODEL` | (Optional) Groq model name |
 | `EMBED_MODEL` | (Optional) local embedding model name (FastEmbed) |
 
+### client/.env
+| Variable | Description |
+|---|---|
+| `VITE_API_URL` | Node API base (default `/api`). For production, if the SPA and API are on **different origins** and `/api` is not reverse-proxied on the same host, set this to the full API base (e.g. `https://api.example.com/api`) so in-app PDF viewing and downloads work. |
+| `VITE_RAG_URL` | RAG service URL |
+
 ## API Reference
 
 ### Auth
@@ -76,6 +82,8 @@ uvicorn main:app --reload  # runs on http://localhost:8000
 |---|---|---|
 | POST | `/api/pdf/upload` | Upload PDF (auth required) |
 | GET | `/api/pdf/public` | List approved PDFs |
+| GET | `/api/pdf/public/:id` | Metadata for one approved PDF (no direct file URL) |
+| GET | `/api/pdf/public/:id/stream` | Stream PDF (`Content-Disposition: inline`). Add `?download=1` for attachment download |
 | GET | `/api/pdf/my` | My uploads (auth required) |
 | GET | `/api/pdf/pending` | Pending PDFs (admin) |
 | GET | `/api/pdf/all` | All PDFs (admin) |
@@ -108,4 +116,7 @@ db.users.updateOne({ email: "admin@example.com" }, { $set: { role: "admin" } })
 | RAG API | Render (Web Service, Python) |
 | Database | MongoDB Atlas |
 | Storage | Cloudinary |
-# EdraFlow_V2.0
+
+### PDF delivery (Cloudinary)
+
+In the Cloudinary console, under **Settings → Security**, allow **delivery of PDF and ZIP files** if public PDF URLs return errors. The API streams approved PDFs from Cloudinary and sets `Content-Disposition` to **inline** (read in browser) or **attachment** (download), so students do not rely on raw CDN headers alone.

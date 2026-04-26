@@ -2,6 +2,8 @@ const express = require("express");
 const {
   uploadPDF,
   getPublicPDFs,
+  getPublicPdfById,
+  streamPublicPdf,
   getPendingPDFs,
   getMyPDFs,
   approvePDF,
@@ -16,6 +18,8 @@ const router = express.Router();
 
 // Public
 router.get("/public", getPublicPDFs);
+router.get("/public/:id/stream", streamPublicPdf);
+router.get("/public/:id", getPublicPdfById);
 
 // Authenticated student routes
 router.post("/upload", protect, upload.single("file"), uploadPDF);

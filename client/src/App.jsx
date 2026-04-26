@@ -10,6 +10,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import PublicPDFs from "./pages/PublicPDFs";
+import PdfViewer from "./pages/PdfViewer";
 import UploadPDF from "./pages/UploadPDF";
 import Chat from "./pages/Chat";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -36,6 +37,7 @@ const App = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/pdfs" element={<PublicPDFs />} />
+              <Route path="/pdfs/:id" element={<PdfViewer />} />
               <Route path="/chat" element={<Chat />} />
 
               {/* Authenticated */}

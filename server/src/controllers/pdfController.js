@@ -1,5 +1,17 @@
+const { Readable } = require("stream");
+const { pipeline } = require("stream/promises");
+const mongoose = require("mongoose");
 const PDF = require("../models/PDF");
 const { cloudinary } = require("../middleware/upload");
+
+/** Safe ASCII fallback + RFC 5987 filename* for Content-Disposition */
+function pdfContentDisposition(title, dispositionType) {
+  const raw = (title || "document").trim() || "document";
+  const withExt = raw.toLowerCase().endsWith(".pdf") ? raw : `${raw}.pdf`;
+  const ascii = withExt.replace(/[^\x20-\x7E]/g, "_").replace(/"/g, "'");
+  const encoded = encodeURIComponent(withExt);
+  return `${dispositionType}; filename="${ascii}"; filename*=UTF-8''${encoded}`;
+}
 
 // ── POST /api/pdf/upload ────────────────────────────────────────────────────
 const uploadPDF = async (req, res) => {
@@ -45,6 +57,65 @@ const getPublicPDFs = async (req, res) => {
     .limit(Number(limit));
 
   res.json({ pdfs, total, page: Number(page), pages: Math.ceil(total / limit) });
+};
+
+// ── GET /api/pdf/public/:id ─────────────────────────────────────────────────
+const getPublicPdfById = async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ message: "Invalid PDF id" });
+  }
+  const pdf = await PDF.findOne({ _id: req.params.id, status: "approved" })
+    .populate("uploadedBy", "name email")
+    .select("-publicId -url");
+
+  if (!pdf) return res.status(404).json({ message: "PDF not found" });
+  res.json({ pdf });
+};
+
+// ── GET /api/pdf/public/:id/stream ───────────────────────────────────────────
+const streamPublicPdf = async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ message: "Invalid PDF id" });
+  }
+  const pdf = await PDF.findOne({ _id: req.params.id, status: "approved" });
+  if (!pdf) return res.status(404).json({ message: "PDF not found" });
+
+  let upstream;
+  try {
+    upstream = await fetch(pdf.url, { redirect: "follow" });
+  } catch (err) {
+    console.error("PDF upstream fetch failed:", err.message);
+    return res.status(502).json({ message: "Failed to retrieve PDF from storage" });
+  }
+
+  if (!upstream.ok) {
+    return res.status(502).json({ message: "Storage returned an error for this PDF" });
+  }
+  if (!upstream.body) {
+    return res.status(502).json({ message: "Empty response from storage" });
+  }
+
+  const asDownload =
+    req.query.download === "1" ||
+    req.query.download === "true" ||
+    req.query.download === "yes";
+
+  const len = upstream.headers.get("content-length");
+  if (len) res.setHeader("Content-Length", len);
+
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader(
+    "Content-Disposition",
+    pdfContentDisposition(pdf.title, asDownload ? "attachment" : "inline")
+  );
+
+  try {
+    await pipeline(Readable.fromWeb(upstream.body), res);
+  } catch (err) {
+    if (err.code !== "ERR_STREAM_PREMATURE_CLOSE") {
+      console.error("PDF stream pipeline error:", err.message);
+    }
+  }
 };
 
 // ── GET /api/pdf/pending (admin) ────────────────────────────────────────────
@@ -120,6 +191,8 @@ const getAllPDFs = async (req, res) => {
 module.exports = {
   uploadPDF,
   getPublicPDFs,
+  getPublicPdfById,
+  streamPublicPdf,
   getPendingPDFs,
   getMyPDFs,
   approvePDF,

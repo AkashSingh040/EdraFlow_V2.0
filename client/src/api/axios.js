@@ -1,8 +1,12 @@
 import axios from "axios";
 
+/** Base path or absolute API URL (no trailing slash). Used for PDF iframe / download URLs. */
+export const getApiBasePath = () =>
+  (import.meta.env.VITE_API_URL || "/api").replace(/\/$/, "");
+
 // Main Node.js API instance
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "/api",
+  baseURL: getApiBasePath(),
   timeout: 15000,
 });
 

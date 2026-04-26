@@ -1,9 +1,21 @@
 import { useState, useEffect, useCallback } from "react";
-import { useSearchParams } from "react-router-dom";
-import api from "../api/axios";
-import { FileText, Search, ExternalLink, Tag, Loader2, AlertCircle, User, Calendar } from "lucide-react";
+import { Link, useSearchParams } from "react-router-dom";
+import api, { getApiBasePath } from "../api/axios";
+import {
+  FileText,
+  Search,
+  Tag,
+  Loader2,
+  AlertCircle,
+  User,
+  Calendar,
+  BookOpen,
+  Download,
+} from "lucide-react";
 
-const PDFCard = ({ pdf }) => (
+const PDFCard = ({ pdf }) => {
+  const downloadHref = `${getApiBasePath()}/pdf/public/${pdf._id}/stream?download=1`;
+  return (
   <div className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all p-5 flex flex-col gap-3">
     <div className="flex items-start gap-3">
       <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -41,17 +53,25 @@ const PDFCard = ({ pdf }) => (
       </span>
     </div>
 
-    <a
-      href={pdf.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex items-center justify-center gap-2 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
-    >
-      <ExternalLink size={15} />
-      Open PDF
-    </a>
+    <div className="flex flex-col gap-2">
+      <Link
+        to={`/pdfs/${pdf._id}`}
+        className="flex items-center justify-center gap-2 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+      >
+        <BookOpen size={15} />
+        Read online
+      </Link>
+      <a
+        href={downloadHref}
+        className="flex items-center justify-center gap-2 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+      >
+        <Download size={15} />
+        Download
+      </a>
+    </div>
   </div>
-);
+  );
+};
 
 const PublicPDFs = () => {
   const [searchParams, setSearchParams] = useSearchParams();
