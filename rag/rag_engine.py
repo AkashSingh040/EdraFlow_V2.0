@@ -1,6 +1,6 @@
 """
 RAG Engine — builds FAISS index from procedures.json and retrieves top matches.
-Uses OpenAI embeddings for vectorisation and OpenAI Chat for response generation.
+Uses local embeddings for vectorisation and Groq Chat for response generation.
 """
 import json
 import os
@@ -8,18 +8,21 @@ import numpy as np
 from pathlib import Path
 from typing import Optional
 
-from openai import OpenAI
+from groq import Groq
+from fastembed import TextEmbedding
 import faiss
 
 DATA_PATH = Path(__file__).parent / "data" / "procedures.json"
-EMBED_MODEL = "text-embedding-3-small"
-CHAT_MODEL = "gpt-3.5-turbo"
+EMBED_MODEL = os.getenv("EMBED_MODEL", "BAAI/bge-small-en-v1.5")
+CHAT_MODEL = os.getenv("GROQ_CHAT_MODEL", "llama-3.1-8b-instant")
 TOP_K = 3
 
 
 class RAGEngine:
     def __init__(self):
-        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        api_key = os.getenv("GROQ_API_KEY")
+        self.client = Groq(api_key=api_key) if api_key else None
+        self.embedder = TextEmbedding(model_name=EMBED_MODEL)
         self.procedures: list[dict] = []
         self.index: Optional[faiss.IndexFlatIP] = None
         self.embeddings: Optional[np.ndarray] = None
@@ -35,8 +38,7 @@ class RAGEngine:
         texts = [self._procedure_to_text(p) for p in self.procedures]
         print(f"[RAG] Embedding {len(texts)} procedures…")
 
-        raw = self.client.embeddings.create(input=texts, model=EMBED_MODEL)
-        vectors = np.array([item.embedding for item in raw.data], dtype="float32")
+        vectors = np.array(list(self.embedder.embed(texts)), dtype="float32")
 
         # Normalise for cosine similarity via inner product
         faiss.normalize_L2(vectors)
@@ -56,8 +58,7 @@ class RAGEngine:
     # ── Retrieval ─────────────────────────────────────────────────────────────
     def retrieve(self, query: str, top_k: int = TOP_K) -> list[dict]:
         """Return top_k most relevant procedures for the query."""
-        raw = self.client.embeddings.create(input=[query], model=EMBED_MODEL)
-        q_vec = np.array([raw.data[0].embedding], dtype="float32")
+        q_vec = np.array(list(self.embedder.embed([query])), dtype="float32")
         faiss.normalize_L2(q_vec)
 
         scores, indices = self.index.search(q_vec, top_k)
@@ -70,6 +71,9 @@ class RAGEngine:
     # ── Generation ────────────────────────────────────────────────────────────
     def chat(self, query: str) -> dict:
         """Retrieve relevant procedures and generate a helpful response."""
+        if self.client is None:
+            raise RuntimeError("GROQ_API_KEY is not set. Add it to rag/.env to enable chat.")
+
         matches = self.retrieve(query, top_k=TOP_K)
 
         if not matches:

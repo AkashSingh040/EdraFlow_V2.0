@@ -35,7 +35,7 @@ npm run dev            # runs on http://localhost:5173
 
 ```bash
 cd rag
-cp .env.example .env   # add your OPENAI_API_KEY
+cp .env.example .env   # add your GROQ_API_KEY
 python -m venv .venv
 .venv\Scripts\activate    # Windows
 source .venv/bin/activate # Mac/Linux
@@ -58,7 +58,9 @@ uvicorn main:app --reload  # runs on http://localhost:8000
 ### rag/.env
 | Variable | Description |
 |---|---|
-| `OPENAI_API_KEY` | OpenAI API key |
+| `GROQ_API_KEY` | Groq API key (for chat completions) |
+| `GROQ_CHAT_MODEL` | (Optional) Groq model name |
+| `EMBED_MODEL` | (Optional) local embedding model name (FastEmbed) |
 
 ## API Reference
 
