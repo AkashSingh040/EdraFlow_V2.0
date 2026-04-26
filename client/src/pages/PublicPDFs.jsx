@@ -78,17 +78,28 @@ const PublicPDFs = () => {
   const [pdfs, setPdfs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [search, setSearch] = useState(searchParams.get("search") || "");
+  /** What the user is typing (not sent to the API until Search). */
+  const [searchInput, setSearchInput] = useState(() => searchParams.get("search") || "");
+  /** Query actually used for GET /pdf/public (full library, paginated). */
+  const [appliedSearch, setAppliedSearch] = useState(() => searchParams.get("search") || "");
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
   const [total, setTotal] = useState(0);
+
+  // Keep in sync when the URL changes (e.g. back/forward, shared link).
+  useEffect(() => {
+    const q = searchParams.get("search") || "";
+    setSearchInput(q);
+    setAppliedSearch(q);
+    setPage(1);
+  }, [searchParams]);
 
   const fetchPDFs = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
       const params = { page, limit: 12 };
-      if (search.trim()) params.search = search.trim();
+      if (appliedSearch.trim()) params.search = appliedSearch.trim();
       const { data } = await api.get("/pdf/public", { params });
       setPdfs(data.pdfs);
       setPages(data.pages);
@@ -98,14 +109,18 @@ const PublicPDFs = () => {
     } finally {
       setLoading(false);
     }
-  }, [search, page]);
+  }, [appliedSearch, page]);
 
-  useEffect(() => { fetchPDFs(); }, [fetchPDFs]);
+  useEffect(() => {
+    fetchPDFs();
+  }, [fetchPDFs]);
 
   const handleSearch = (e) => {
     e.preventDefault();
+    const q = searchInput.trim();
+    setAppliedSearch(q);
     setPage(1);
-    setSearchParams(search.trim() ? { search: search.trim() } : {});
+    setSearchParams(q ? { search: q } : {});
   };
 
   return (
@@ -122,8 +137,8 @@ const PublicPDFs = () => {
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search by title…"
             className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
           />
@@ -134,10 +149,15 @@ const PublicPDFs = () => {
         >
           Search
         </button>
-        {search && (
+        {(searchInput || appliedSearch) && (
           <button
             type="button"
-            onClick={() => { setSearch(""); setPage(1); setSearchParams({}); }}
+            onClick={() => {
+              setSearchInput("");
+              setAppliedSearch("");
+              setPage(1);
+              setSearchParams({});
+            }}
             className="px-4 py-2.5 border border-gray-200 text-gray-600 text-sm rounded-xl hover:bg-gray-50 transition-colors"
           >
             Clear
