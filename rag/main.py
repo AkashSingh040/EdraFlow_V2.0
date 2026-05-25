@@ -63,15 +63,39 @@ async def health():
     return {"status": "ok", "service": "edraflow-rag", "indexed": rag.index.ntotal if rag else 0}
 
 
-@app.post("/chat", response_model=ChatResponse)
+# @app.post("/chat", response_model=ChatResponse)
+# async def chat(body: ChatRequest):
+#     if rag is None:
+#         raise HTTPException(status_code=503, detail="RAG engine not ready")
+#     try:
+#         result = rag.chat(body.query)
+#         return ChatResponse(**result)
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/chat")
 async def chat(body: ChatRequest):
-    if rag is None:
-        raise HTTPException(status_code=503, detail="RAG engine not ready")
     try:
+        print("QUERY:", body.query)
+
         result = rag.chat(body.query)
-        return ChatResponse(**result)
+
+        print("RESULT:", result)
+        print("TYPE:", type(result))
+
+        return {
+            "answer": str(result.get("answer", "")),
+            "steps": result.get("steps"),
+            "source": result.get("source"),
+            "title": result.get("title"),
+            "score": float(result["score"]) if result.get("score") is not None else None,
+        }
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        import traceback
+        print(traceback.format_exc())
+
+        return {"error": str(e)}
 
 
 @app.post("/reload")
