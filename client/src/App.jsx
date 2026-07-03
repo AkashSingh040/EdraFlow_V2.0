@@ -14,6 +14,7 @@ import PdfViewer from "./pages/PdfViewer";
 import UploadPDF from "./pages/UploadPDF";
 import Chat from "./pages/Chat";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import ManageProcedures from "./pages/admin/ManageProcedures";
 
 const App = () => {
   return (
@@ -48,6 +49,7 @@ const App = () => {
               {/* Admin only */}
               <Route element={<AdminRoute />}>
                 <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/procedures" element={<ManageProcedures />} />
               </Route>
 
               {/* 404 */}

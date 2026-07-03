@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import api from "../../api/axios";
 import {
   LayoutDashboard, FileText, CheckCircle, XCircle, Clock,
-  RefreshCw, Loader2, AlertCircle, ExternalLink, Users, Tag, User
+  RefreshCw, Loader2, AlertCircle, ExternalLink, Users, Tag, User,
+  ClipboardList,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -168,6 +170,22 @@ const AdminDashboard = () => {
         <StatCard icon={Clock} label="Pending" value={stats.pending} color="bg-amber-500" />
         <StatCard icon={CheckCircle} label="Approved" value={stats.approved} color="bg-emerald-500" />
         <StatCard icon={XCircle} label="Rejected" value={stats.rejected} color="bg-red-500" />
+      </div>
+
+      {/* Quick Actions */}
+      <div className="mb-8">
+        <Link
+          to="/admin/procedures"
+          className="inline-flex items-center gap-3 bg-white rounded-xl border border-gray-100 shadow-sm px-5 py-4 hover:shadow-md hover:border-indigo-200 transition-all group"
+        >
+          <div className="w-10 h-10 bg-violet-100 rounded-xl flex items-center justify-center group-hover:bg-violet-200 transition-colors">
+            <ClipboardList size={20} className="text-violet-600" />
+          </div>
+          <div>
+            <p className="font-semibold text-gray-900 text-sm">Manage Procedures</p>
+            <p className="text-xs text-gray-500">Add or remove EdraChat knowledge base entries</p>
+          </div>
+        </Link>
       </div>
 
       {/* Content */}

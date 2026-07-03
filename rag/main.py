@@ -57,6 +57,15 @@ class ChatResponse(BaseModel):
     score: float | None = None
 
 
+class ProcedureIn(BaseModel):
+    id: str = Field(..., min_length=1, max_length=100, description="Unique slug identifier")
+    title: str = Field(..., min_length=3, max_length=200, description="Procedure title")
+    steps: list[str] = Field(..., min_length=1, description="Ordered step-by-step instructions")
+    tags: list[str] = Field(default=[], description="Search tags")
+    department: str = Field(..., min_length=1, max_length=200, description="Responsible department")
+    contact: str = Field(..., min_length=1, max_length=200, description="Contact email or phone")
+
+
 # ── Routes ───────────────────────────────────────────────────────────────────
 @app.get("/health")
 async def health():
@@ -105,3 +114,36 @@ async def reload():
         raise HTTPException(status_code=503, detail="RAG engine not ready")
     rag.reload()
     return {"message": "Index reloaded", "count": rag.index.ntotal}
+
+
+# ── Procedure CRUD ───────────────────────────────────────────────────────────
+@app.get("/procedures")
+async def list_procedures():
+    """Return all procedures in the knowledge base."""
+    if rag is None:
+        raise HTTPException(status_code=503, detail="RAG engine not ready")
+    return {"procedures": rag.get_procedures(), "total": len(rag.get_procedures())}
+
+
+@app.post("/procedures", status_code=201)
+async def create_procedure(body: ProcedureIn):
+    """Add a new procedure to the knowledge base and rebuild the index."""
+    if rag is None:
+        raise HTTPException(status_code=503, detail="RAG engine not ready")
+    try:
+        proc = rag.add_procedure(body.model_dump())
+        return {"message": "Procedure added", "procedure": proc}
+    except ValueError as e:
+        raise HTTPException(status_code=409, detail=str(e))
+
+
+@app.delete("/procedures/{proc_id}")
+async def remove_procedure(proc_id: str):
+    """Delete a procedure by id and rebuild the index."""
+    if rag is None:
+        raise HTTPException(status_code=503, detail="RAG engine not ready")
+    try:
+        proc = rag.delete_procedure(proc_id)
+        return {"message": "Procedure deleted", "procedure": proc}
+    except KeyError as e:
+        raise HTTPException(status_code=404, detail=str(e))

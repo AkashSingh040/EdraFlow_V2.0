@@ -20,23 +20,37 @@ const Message = ({ msg }) => {
             : "bg-indigo-600 text-white"
         }`}
       >
-        {/* Render steps as numbered list if present */}
-        {isBot && msg.steps ? (
-          <div>
-            <p className="font-medium mb-2">{msg.content}</p>
-            <ol className="list-decimal list-inside space-y-1">
+        {/* Answer text */}
+        <p className="whitespace-pre-line">{msg.content}</p>
+
+        {/* Steps — shown only for bot messages with steps */}
+        {isBot && msg.steps && msg.steps.length > 0 && (
+          <div className="mt-3 pt-3 border-t border-gray-100">
+            <p className="text-xs font-semibold text-indigo-600 uppercase tracking-wide mb-2 flex items-center gap-1">
+              <BookOpen size={12} />
+              Steps to follow
+            </p>
+            <ol className="space-y-1.5">
               {msg.steps.map((step, i) => (
-                <li key={i} className="text-gray-700">{step}</li>
+                <li key={i} className="flex gap-2 text-gray-700">
+                  <span className="flex-shrink-0 w-5 h-5 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center text-xs font-bold">
+                    {i + 1}
+                  </span>
+                  <span className="pt-0.5">{step}</span>
+                </li>
               ))}
             </ol>
-            {msg.source && (
-              <p className="text-xs text-gray-400 mt-3 pt-2 border-t border-gray-100">
-                Source: {msg.source}
-              </p>
-            )}
           </div>
-        ) : (
-          <p>{msg.content}</p>
+        )}
+
+        {/* Source badge */}
+        {isBot && msg.source && (
+          <div className="mt-3 pt-2 border-t border-gray-100 flex items-center gap-1.5">
+            <span className="text-xs text-gray-400">Source:</span>
+            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-medium">
+              {msg.source}
+            </span>
+          </div>
         )}
 
         {msg.error && (

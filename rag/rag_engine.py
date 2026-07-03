@@ -94,15 +94,19 @@ class RAGEngine:
         system_prompt = (
             "You are EdraChat, a helpful university assistant. "
             "Answer students' questions about university procedures clearly and concisely. "
-            "Use the provided procedure data to give accurate, step-by-step guidance. "
+            "Use the provided procedure data to give accurate guidance. "
+            "IMPORTANT: Do NOT list or repeat the step-by-step instructions in your answer — "
+            "the steps will be displayed separately in the UI. Instead, give a brief, "
+            "friendly summary that tells the student what the procedure is about, "
+            "which department handles it, and any key tips or things to watch out for. "
+            "Keep your answer to 2-4 sentences maximum. "
             "If the data doesn't cover the question, say so politely."
         )
 
         user_prompt = (
             f"Student question: {query}\n\n"
             f"Relevant university procedures:\n{context}\n\n"
-            f"Please provide a clear, helpful answer. "
-            f"If the answer involves steps, list them numbered."
+            f"Provide a brief, helpful summary. Do NOT repeat the steps — they are shown separately."
         )
 
         completion = self.client.chat.completions.create(
@@ -128,3 +132,35 @@ class RAGEngine:
     def reload(self):
         """Reload procedures and rebuild the FAISS index (admin utility)."""
         self._build_index()
+
+    # ── CRUD operations ──────────────────────────────────────────────────────
+    def _save_procedures(self):
+        """Persist the current procedures list to disk."""
+        with open(DATA_PATH, "w", encoding="utf-8") as f:
+            json.dump(self.procedures, f, indent=2, ensure_ascii=False)
+
+    def get_procedures(self) -> list[dict]:
+        """Return all procedures."""
+        return self.procedures
+
+    def add_procedure(self, proc: dict) -> dict:
+        """Add a new procedure, save to disk, and rebuild the index."""
+        # Check for duplicate id
+        if any(p["id"] == proc["id"] for p in self.procedures):
+            raise ValueError(f"Procedure with id '{proc['id']}' already exists")
+
+        self.procedures.append(proc)
+        self._save_procedures()
+        self._build_index()
+        return proc
+
+    def delete_procedure(self, proc_id: str) -> dict:
+        """Remove a procedure by id, save to disk, and rebuild the index."""
+        proc = next((p for p in self.procedures if p["id"] == proc_id), None)
+        if proc is None:
+            raise KeyError(f"Procedure with id '{proc_id}' not found")
+
+        self.procedures = [p for p in self.procedures if p["id"] != proc_id]
+        self._save_procedures()
+        self._build_index()
+        return proc

@@ -8,6 +8,7 @@ const mongoose = require("mongoose");
 
 const authRoutes = require("./src/routes/authRoutes");
 const pdfRoutes = require("./src/routes/pdfRoutes");
+const procedureRoutes = require("./src/routes/procedureRoutes");
 const errorHandler = require("./src/middleware/errorHandler");
 
 const app = express();
@@ -22,6 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 // ── Routes ──────────────────────────────────────────────────────────────────
 app.use("/api/auth", authRoutes);
 app.use("/api/pdf", pdfRoutes);
+app.use("/api/procedures", procedureRoutes);
 
 app.get("/api/health", (req, res) => res.json({ status: "ok", service: "edraflow-server" }));
 
