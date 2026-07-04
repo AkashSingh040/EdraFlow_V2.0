@@ -1,6 +1,6 @@
 # Edraflow
 
-A production-ready student platform with PDF sharing, admin approval, and an AI chatbot (EdraChat) powered by RAG.
+EdraFlow is a full-stack AI-powered platform that helps students access verified study resources and institutional procedures through an intelligent chatbot. It leverages a Retrieval-Augmented Generation (RAG) pipeline using LangChain, FAISS, FastAPI, and the Groq API to deliver accurate, context-aware responses. Built with a microservices architecture, the platform combines React, Node.js, FastAPI, MongoDB Atlas, JWT, Cloudinary, and FAISS to provide secure document management, semantic search, and role-based access control.
 
 ## Architecture
 
