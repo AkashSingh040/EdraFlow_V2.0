@@ -17,7 +17,7 @@ edraflow/
 
 ```bash
 cd server
-cp .env.example .env   # fill in your values
+cp .env.example .env   # fill in your values in .env file
 npm install --legacy-peer-deps
 npm run dev            # runs on http://localhost:5000
 ```
