@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { BookOpen, Upload, MessageSquare, LayoutDashboard, LogOut, LogIn, Menu, X } from "lucide-react";
+import { BookOpen, Upload, MessageSquare, LayoutDashboard, LogOut, LogIn, Menu, X, FileText } from "lucide-react";
 import { useState } from "react";
 
 const NavItem = ({ to, icon: Icon, label }) => (
@@ -44,6 +44,7 @@ const Navbar = () => {
           <NavItem to="/pdfs" icon={BookOpen} label="PDFs" />
           {user && <NavItem to="/upload" icon={Upload} label="Upload" />}
           <NavItem to="/chat" icon={MessageSquare} label="EdraChat" />
+          <NavItem to="/pdf-chat" icon={FileText} label="PDF Chat" />
           {user?.role === "admin" && (
             <NavItem to="/admin" icon={LayoutDashboard} label="Admin" />
           )}
@@ -93,6 +94,7 @@ const Navbar = () => {
           <NavItem to="/pdfs" icon={BookOpen} label="PDFs" />
           {user && <NavItem to="/upload" icon={Upload} label="Upload" />}
           <NavItem to="/chat" icon={MessageSquare} label="EdraChat" />
+          <NavItem to="/pdf-chat" icon={FileText} label="PDF Chat" />
           {user?.role === "admin" && (
             <NavItem to="/admin" icon={LayoutDashboard} label="Admin" />
           )}

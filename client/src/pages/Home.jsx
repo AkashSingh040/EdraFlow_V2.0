@@ -147,7 +147,7 @@ const Home = () => {
           <BookOpen size={18} className="text-indigo-600" />
           Edraflow
         </div>
-        © {new Date().getFullYear()} Edraflow. Built for students, by students.
+        © {new Date().getFullYear()} Edraflow. Built for student's Community.
       </footer>
     </div>
   );

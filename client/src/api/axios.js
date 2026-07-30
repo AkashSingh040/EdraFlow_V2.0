@@ -36,4 +36,12 @@ export const ragApi = axios.create({
   timeout: 30000,
 });
 
+// PDF Chat FastAPI instance (port 8001)
+// In development, Vite proxies /pdf-chat-api → http://localhost:8001
+// In production, set VITE_PDF_CHAT_URL to the deployed service URL
+export const pdfChatApi = axios.create({
+  baseURL: import.meta.env.VITE_PDF_CHAT_URL || "/pdf-chat-api",
+  timeout: 60000, // longer timeout for LLM responses
+});
+
 export default api;

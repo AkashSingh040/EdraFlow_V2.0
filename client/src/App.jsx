@@ -13,6 +13,7 @@ import PublicPDFs from "./pages/PublicPDFs";
 import PdfViewer from "./pages/PdfViewer";
 import UploadPDF from "./pages/UploadPDF";
 import Chat from "./pages/Chat";
+import PdfChat from "./pages/PdfChat";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ManageProcedures from "./pages/admin/ManageProcedures";
 
@@ -40,6 +41,7 @@ const App = () => {
               <Route path="/pdfs" element={<PublicPDFs />} />
               <Route path="/pdfs/:id" element={<PdfViewer />} />
               <Route path="/chat" element={<Chat />} />
+              <Route path="/pdf-chat" element={<PdfChat />} />
 
               {/* Authenticated */}
               <Route element={<PrivateRoute />}>

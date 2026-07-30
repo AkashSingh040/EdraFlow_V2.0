@@ -11,6 +11,11 @@ export default defineConfig({
         target: "http://localhost:5000",
         changeOrigin: true,
       },
+      "/pdf-chat-api": {
+        target: "http://localhost:8001",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/pdf-chat-api/, ""),
+      },
     },
   },
 });
