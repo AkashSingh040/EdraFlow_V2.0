@@ -1,17 +1,28 @@
 """
 Edraflow RAG Service — FastAPI application
 Provides /chat endpoint powered by FAISS + OpenAI embeddings.
+
+Security:
+  - IP-based rate limiting on all endpoints via slowapi
+  - Input validation via Pydantic (min/max lengths on all fields)
 """
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 
 load_dotenv()
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 
 from rag_engine import RAGEngine
+
+# ── Rate Limiter ──────────────────────────────────────────────────────────────
+limiter = Limiter(key_func=get_remote_address, default_limits=["200/day"])
 
 # ── App lifespan: load RAG engine once at startup ─────────────────────────
 rag: RAGEngine | None = None
@@ -34,10 +45,19 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# ── Rate limiter wiring ───────────────────────────────────────────────────────
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 # ── CORS ─────────────────────────────────────────────────────────────────────
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "https://edra-flow-v2-0-2w31qsepf-akashsingh040s-projects.vercel.app" , "https://edra-flow-v2-0-r5yazoe17-akashsingh040s-projects.vercel.app","https://edra-flow-v2-0-git-main-akashsingh040s-projects.vercel.app"],
+    allow_origins=[
+        "http://localhost:5173",
+        "https://edra-flow-v2-0-2w31qsepf-akashsingh040s-projects.vercel.app",
+        "https://edra-flow-v2-0-r5yazoe17-akashsingh040s-projects.vercel.app",
+        "https://edra-flow-v2-0-git-main-akashsingh040s-projects.vercel.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -46,7 +66,12 @@ app.add_middleware(
 
 # ── Schemas ──────────────────────────────────────────────────────────────────
 class ChatRequest(BaseModel):
-    query: str = Field(..., min_length=2, max_length=500, description="User's question")
+    query: str = Field(
+        ...,
+        min_length=2,
+        max_length=500,
+        description="User's question",
+    )
 
 
 class ChatResponse(BaseModel):
@@ -68,22 +93,20 @@ class ProcedureIn(BaseModel):
 
 # ── Routes ───────────────────────────────────────────────────────────────────
 @app.get("/health")
-async def health():
+@limiter.limit("60/minute")
+async def health(request: Request):
     return {"status": "ok", "service": "edraflow-rag", "indexed": rag.index.ntotal if rag else 0}
 
 
-# @app.post("/chat", response_model=ChatResponse)
-# async def chat(body: ChatRequest):
-#     if rag is None:
-#         raise HTTPException(status_code=503, detail="RAG engine not ready")
-#     try:
-#         result = rag.chat(body.query)
-#         return ChatResponse(**result)
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=str(e))
-
 @app.post("/chat")
-async def chat(body: ChatRequest):
+@limiter.limit("10/minute")
+async def chat(request: Request, body: ChatRequest):
+    """
+    Ask the procedural RAG bot a question.
+    Rate limited to 10 requests/minute per IP.
+    """
+    if rag is None:
+        raise HTTPException(status_code=503, detail="RAG engine not ready")
     try:
         print("QUERY:", body.query)
 
@@ -103,13 +126,16 @@ async def chat(body: ChatRequest):
     except Exception as e:
         import traceback
         print(traceback.format_exc())
-
         return {"error": str(e)}
 
 
 @app.post("/reload")
-async def reload():
-    """Reload procedure data and rebuild the FAISS index."""
+@limiter.limit("2/minute")
+async def reload(request: Request):
+    """
+    Reload procedure data and rebuild the FAISS index.
+    Rate limited to 2 requests/minute per IP to prevent CPU abuse.
+    """
     if rag is None:
         raise HTTPException(status_code=503, detail="RAG engine not ready")
     rag.reload()
@@ -118,7 +144,8 @@ async def reload():
 
 # ── Procedure CRUD ───────────────────────────────────────────────────────────
 @app.get("/procedures")
-async def list_procedures():
+@limiter.limit("30/minute")
+async def list_procedures(request: Request):
     """Return all procedures in the knowledge base."""
     if rag is None:
         raise HTTPException(status_code=503, detail="RAG engine not ready")
@@ -126,8 +153,12 @@ async def list_procedures():
 
 
 @app.post("/procedures", status_code=201)
-async def create_procedure(body: ProcedureIn):
-    """Add a new procedure to the knowledge base and rebuild the index."""
+@limiter.limit("5/minute")
+async def create_procedure(request: Request, body: ProcedureIn):
+    """
+    Add a new procedure to the knowledge base and rebuild the index.
+    Rate limited to 5 requests/minute per IP.
+    """
     if rag is None:
         raise HTTPException(status_code=503, detail="RAG engine not ready")
     try:
@@ -138,8 +169,12 @@ async def create_procedure(body: ProcedureIn):
 
 
 @app.delete("/procedures/{proc_id}")
-async def remove_procedure(proc_id: str):
-    """Delete a procedure by id and rebuild the index."""
+@limiter.limit("5/minute")
+async def remove_procedure(request: Request, proc_id: str):
+    """
+    Delete a procedure by id and rebuild the index.
+    Rate limited to 5 requests/minute per IP.
+    """
     if rag is None:
         raise HTTPException(status_code=503, detail="RAG engine not ready")
     try:

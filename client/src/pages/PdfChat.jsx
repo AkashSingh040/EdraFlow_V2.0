@@ -212,6 +212,11 @@ const PdfChat = () => {
       return;
     }
 
+    if (text.length < 2) {
+      toast.error("Please enter at least 2 characters.");
+      return;
+    }
+
     setMessages((prev) => [...prev, { role: "user", content: text }]);
     setInput("");
     setLoading(true);

@@ -26,6 +26,9 @@ const Message = ({ msg }) => {
         {/* Steps — shown only for bot messages with steps */}
         {isBot && msg.steps && msg.steps.length > 0 && (
           <div className="mt-3 pt-3 border-t border-gray-100">
+            {msg.title && (
+              <p className="text-xs font-semibold text-gray-700 mb-2 truncate">{msg.title}</p>
+            )}
             <p className="text-xs font-semibold text-indigo-600 uppercase tracking-wide mb-2 flex items-center gap-1">
               <BookOpen size={12} />
               Steps to follow
@@ -108,7 +111,8 @@ const Chat = () => {
         role: "assistant",
         content: data.answer || data.response || "Here is what I found:",
         steps: data.steps || null,
-        source: data.source || data.title || null,
+        source: data.source || null,
+        title: data.title || null,
       };
       setMessages((prev) => [...prev, botMsg]);
     } catch (err) {
