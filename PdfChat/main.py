@@ -256,8 +256,8 @@ async def delete_session(request: Request, session_id: str):
     return {"message": f"Session '{session_id}' deleted successfully."}
 
 
-# ── Entrypoint ────────────────────────────────────────────────────────────────
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.getenv("PDF_CHAT_PORT", 8001))
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
+# # ── Entrypoint ────────────────────────────────────────────────────────────────
+# if __name__ == "__main__":
+#     import uvicorn
+#     port = int(os.getenv("PDF_CHAT_PORT", 8001))
+#     uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
