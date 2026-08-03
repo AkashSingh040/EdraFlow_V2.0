@@ -64,12 +64,23 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # ── CORS ─────────────────────────────────────────────────────────────────────
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=[
+#         "http://localhost:5173",
+#         "http://localhost:5174",
+#     ],
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
+
+# changing this to make it compatible with deployment without changes in code
+origins = os.getenv("CORS_ORIGINS", "").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://localhost:5174",
-    ],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -245,8 +256,8 @@ async def delete_session(request: Request, session_id: str):
     return {"message": f"Session '{session_id}' deleted successfully."}
 
 
-# ── Entrypoint ────────────────────────────────────────────────────────────────
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.getenv("PDF_CHAT_PORT", 8001))
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
+# # ── Entrypoint ────────────────────────────────────────────────────────────────
+# if __name__ == "__main__":
+#     import uvicorn
+#     port = int(os.getenv("PDF_CHAT_PORT", 8001))
+#     uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
