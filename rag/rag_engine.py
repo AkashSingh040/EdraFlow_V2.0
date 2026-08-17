@@ -14,7 +14,7 @@ import faiss
 
 DATA_PATH = Path(__file__).parent / "data" / "procedures.json"
 EMBED_MODEL = os.getenv("EMBED_MODEL", "BAAI/bge-small-en-v1.5")
-CHAT_MODEL = os.getenv("GROQ_CHAT_MODEL", "llama-3.1-8b-instant")
+CHAT_MODEL = os.getenv("GROQ_CHAT_MODEL", "openai/gpt-oss-120b")
 TOP_K = 3
 
 
