@@ -15,6 +15,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import ReactMarkdown from "react-markdown";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 const uid = () => Math.random().toString(36).slice(2, 10);
@@ -49,7 +50,22 @@ const Message = ({ msg }) => {
             : "bg-indigo-600 text-white"
         }`}
       >
-        <p className="whitespace-pre-line">{msg.content}</p>
+        <ReactMarkdown 
+          components={{
+            p: ({node, ...props}) => <p className="mb-2 last:mb-0 whitespace-pre-line" {...props} />,
+            strong: ({node, ...props}) => <strong className="font-bold" {...props} />,
+            ul: ({node, ...props}) => <ul className="list-disc pl-5 mb-2 space-y-1" {...props} />,
+            ol: ({node, ...props}) => <ol className="list-decimal pl-5 mb-2 space-y-1" {...props} />,
+            li: ({node, ...props}) => <li className="" {...props} />,
+            h1: ({node, ...props}) => <h1 className="text-xl font-bold mb-2 mt-4" {...props} />,
+            h2: ({node, ...props}) => <h2 className="text-lg font-bold mb-2 mt-3" {...props} />,
+            h3: ({node, ...props}) => <h3 className="text-base font-bold mb-2 mt-3" {...props} />,
+            a: ({node, ...props}) => <a className="underline hover:text-indigo-200 transition-colors" target="_blank" rel="noopener noreferrer" {...props} />,
+            code: ({node, inline, ...props}) => inline ? <code className="bg-black/10 rounded px-1 py-0.5 text-xs font-mono" {...props} /> : <pre className="bg-black/10 rounded-lg p-3 my-2 overflow-x-auto text-xs font-mono"><code {...props} /></pre>
+          }}
+        >
+          {msg.content}
+        </ReactMarkdown>
 
         {/* Source references */}
         {isBot && msg.sources && msg.sources.length > 0 && (
