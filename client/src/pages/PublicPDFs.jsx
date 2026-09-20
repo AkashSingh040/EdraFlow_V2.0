@@ -13,10 +13,10 @@ import {
   Download,
 } from "lucide-react";
 
-const PDFCard = ({ pdf }) => {
+const PDFCard = ({ pdf, index = 0 }) => {
   const downloadHref = `${getApiBasePath()}/pdf/public/${pdf._id}/stream?download=1`;
   return (
-  <div className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all p-5 flex flex-col gap-3">
+  <div className="bg-white rounded-xl border border-gray-100 shadow-sm hover:-translate-y-1 hover:shadow-lg transition-all p-5 flex flex-col gap-3 animate-fade-in-up" style={{ animationDelay: `${index * 50}ms`, animationFillMode: "both" }}>
     <div className="flex items-start gap-3">
       <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
         <FileText size={20} className="text-indigo-600" />
@@ -56,14 +56,14 @@ const PDFCard = ({ pdf }) => {
     <div className="flex flex-col gap-2">
       <Link
         to={`/pdfs/${pdf._id}`}
-        className="flex items-center justify-center gap-2 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+        className="flex items-center justify-center gap-2 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 hover:shadow-md transition-all active:scale-95"
       >
         <BookOpen size={15} />
         Read online
       </Link>
       <a
         href={downloadHref}
-        className="flex items-center justify-center gap-2 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+        className="flex items-center justify-center gap-2 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 hover:shadow-sm transition-all active:scale-95"
       >
         <Download size={15} />
         Download
@@ -140,12 +140,12 @@ const PublicPDFs = () => {
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search by title…"
-            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm shadow-sm transition-all"
           />
         </div>
         <button
           type="submit"
-          className="px-5 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-xl hover:bg-indigo-700 transition-colors"
+          className="px-5 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-xl hover:bg-indigo-700 hover:shadow-md transition-all active:scale-95"
         >
           Search
         </button>
@@ -158,7 +158,7 @@ const PublicPDFs = () => {
               setPage(1);
               setSearchParams({});
             }}
-            className="px-4 py-2.5 border border-gray-200 text-gray-600 text-sm rounded-xl hover:bg-gray-50 transition-colors"
+            className="px-4 py-2.5 border border-gray-200 text-gray-600 text-sm rounded-xl hover:bg-gray-50 hover:shadow-sm transition-all active:scale-95"
           >
             Clear
           </button>
@@ -191,7 +191,7 @@ const PublicPDFs = () => {
       ) : (
         <>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {pdfs.map((pdf) => <PDFCard key={pdf._id} pdf={pdf} />)}
+            {pdfs.map((pdf, idx) => <PDFCard key={pdf._id} pdf={pdf} index={idx} />)}
           </div>
 
           {/* Pagination */}
@@ -201,9 +201,9 @@ const PublicPDFs = () => {
                 <button
                   key={p}
                   onClick={() => setPage(p)}
-                  className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors ${
+                  className={`w-9 h-9 rounded-lg text-sm font-medium transition-all active:scale-90 ${
                     p === page
-                      ? "bg-indigo-600 text-white"
+                      ? "bg-indigo-600 text-white shadow-md"
                       : "border border-gray-200 text-gray-600 hover:bg-gray-50"
                   }`}
                 >

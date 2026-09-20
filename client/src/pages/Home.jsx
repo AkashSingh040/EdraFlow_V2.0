@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Search, Upload, MessageSquare, FileText, ArrowRight, BookOpen, Shield, Zap } from "lucide-react";
 
 const FeatureCard = ({ icon: Icon, title, description, color }) => (
-  <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+  <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:-translate-y-1 hover:shadow-lg transition-all">
     <div className={`w-12 h-12 ${color} rounded-xl flex items-center justify-center mb-4`}>
       <Icon size={24} className="text-white" />
     </div>
@@ -26,20 +26,20 @@ const Home = () => {
       {/* Hero */}
       <section className="bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-indigo-100 text-indigo-700 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
+          <div className="inline-flex items-center gap-2 bg-indigo-100/80 text-indigo-700 px-4 py-1.5 rounded-full text-sm font-medium mb-6 animate-fade-in-up backdrop-blur-sm shadow-sm">
             <Zap size={14} />
             AI-powered student platform
           </div>
-          <h1 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">
+          <h1 className="text-5xl font-bold text-gray-900 mb-6 leading-tight animate-fade-in-up" style={{ animationDelay: "100ms" }}>
             Learn smarter with{" "}
-            <span className="text-indigo-600">Edraflow</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Edraflow</span>
           </h1>
-          <p className="text-xl text-gray-500 mb-10 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-500 mb-10 max-w-2xl mx-auto animate-fade-in-up" style={{ animationDelay: "200ms", animationFillMode: "both" }}>
             Share academic PDFs, get instant AI-powered answers to your university questions, and collaborate with your peers.
           </p>
 
           {/* Search bar */}
-          <form onSubmit={handleSearch} className="flex max-w-xl mx-auto gap-2 mb-8">
+          <form onSubmit={handleSearch} className="flex max-w-xl mx-auto gap-2 mb-8 animate-fade-in-up" style={{ animationDelay: "300ms", animationFillMode: "both" }}>
             <div className="flex-1 relative">
               <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
@@ -52,7 +52,7 @@ const Home = () => {
             </div>
             <button
               type="submit"
-              className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-colors flex items-center gap-2"
+              className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 hover:shadow-md transition-all active:scale-95 flex items-center gap-2"
             >
               Search
               <ArrowRight size={16} />
@@ -60,17 +60,24 @@ const Home = () => {
           </form>
 
           {/* CTA buttons */}
-          <div className="flex items-center justify-center gap-4 flex-wrap">
+          <div className="flex items-center justify-center gap-4 flex-wrap animate-fade-in-up" style={{ animationDelay: "400ms", animationFillMode: "both" }}>
             <Link
               to="/chat"
-              className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-colors shadow-sm"
+              className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 hover:shadow-md transition-all active:scale-95 shadow-sm"
             >
               <MessageSquare size={18} />
               Ask EdraChat
             </Link>
             <Link
+              to="/pdf-chat"
+              className="flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 hover:shadow-md transition-all active:scale-95 shadow-sm"
+            >
+              <Zap size={18} />
+              PDF Chat
+            </Link>
+            <Link
               to="/pdfs"
-              className="flex items-center gap-2 px-6 py-3 bg-white text-gray-700 border border-gray-200 rounded-xl font-medium hover:bg-gray-50 transition-colors shadow-sm"
+              className="flex items-center gap-2 px-6 py-3 bg-white/80 backdrop-blur-md text-gray-700 border border-gray-200 rounded-xl font-medium hover:bg-gray-50 hover:shadow-md transition-all active:scale-95 shadow-sm"
             >
               <FileText size={18} />
               Browse PDFs
@@ -100,7 +107,7 @@ const Home = () => {
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-4">Everything you need to succeed</h2>
           <p className="text-center text-gray-500 mb-12">One platform for all your academic resource needs</p>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6">
             <FeatureCard
               icon={FileText}
               title="PDF Library"
@@ -112,6 +119,12 @@ const Home = () => {
               title="EdraChat AI"
               description="Ask questions about university procedures, scholarships, registration and more — get instant, accurate answers."
               color="bg-purple-500"
+            />
+            <FeatureCard
+              icon={Zap}
+              title="Interactive PDF Chat"
+              description="Upload any document and instantly chat with it. Extract summaries and understand complex topics with AI."
+              color="bg-pink-500"
             />
             <FeatureCard
               icon={Shield}
@@ -133,7 +146,7 @@ const Home = () => {
           </p>
           <Link
             to="/upload"
-            className="inline-flex items-center gap-2 px-8 py-3 bg-white text-indigo-600 rounded-xl font-semibold hover:bg-indigo-50 transition-colors"
+            className="inline-flex items-center gap-2 px-8 py-3 bg-white text-indigo-600 rounded-xl font-semibold hover:bg-indigo-50 hover:shadow-lg transition-all active:scale-95"
           >
             <Upload size={18} />
             Upload a PDF

@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 const Message = ({ msg }) => {
   const isBot = msg.role === "assistant";
   return (
-    <div className={`flex gap-3 ${isBot ? "justify-start" : "justify-end"}`}>
+    <div className={`flex gap-3 animate-fade-in-up ${isBot ? "justify-start" : "justify-end"}`}>
       {isBot && (
         <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center flex-shrink-0 mt-0.5">
           <Bot size={16} className="text-white" />
@@ -182,7 +182,7 @@ const Chat = () => {
               <button
                 key={q}
                 onClick={() => sendMessage(q)}
-                className="flex items-center gap-1.5 text-sm px-3 py-1.5 border border-indigo-200 text-indigo-700 bg-indigo-50 rounded-full hover:bg-indigo-100 transition-colors"
+                className="flex items-center gap-1.5 text-sm px-3 py-1.5 border border-indigo-200 text-indigo-700 bg-indigo-50 rounded-full hover:bg-indigo-100 hover:shadow-sm transition-all active:scale-95"
               >
                 <BookOpen size={13} />
                 {q}
@@ -200,13 +200,13 @@ const Chat = () => {
           onKeyDown={handleKeyDown}
           rows={1}
           placeholder="Ask about scholarships, registration, procedures…"
-          className="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm resize-none"
+          className="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm resize-none shadow-sm transition-shadow focus:shadow-md"
           style={{ maxHeight: "120px" }}
         />
         <button
           onClick={() => sendMessage()}
           disabled={!input.trim() || loading}
-          className="px-4 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+          className="px-4 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 hover:shadow-md transition-all active:scale-95 disabled:opacity-50 flex items-center gap-2"
         >
           {loading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
         </button>

@@ -7,9 +7,9 @@ const NavItem = ({ to, icon: Icon, label }) => (
   <NavLink
     to={to}
     className={({ isActive }) =>
-      `flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+      `flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all active:scale-95 ${
         isActive
-          ? "bg-indigo-100 text-indigo-700"
+          ? "bg-indigo-100/80 text-indigo-700"
           : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
       }`
     }
@@ -30,7 +30,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <nav className="bg-white/80 backdrop-blur-md border-b border-white/20 shadow-sm sticky top-0 z-50 transition-all">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 font-bold text-xl text-indigo-600">
@@ -64,7 +64,7 @@ const Navbar = () => {
               </span>
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-1 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                className="flex items-center gap-1 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-all active:scale-95"
               >
                 <LogOut size={16} />
                 Logout
@@ -73,7 +73,7 @@ const Navbar = () => {
           ) : (
             <Link
               to="/login"
-              className="flex items-center gap-1 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+              className="flex items-center gap-1 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 hover:shadow-md transition-all active:scale-95"
             >
               <LogIn size={16} />
               Login
@@ -82,14 +82,14 @@ const Navbar = () => {
         </div>
 
         {/* Mobile hamburger */}
-        <button className="md:hidden p-2" onClick={() => setOpen(!open)}>
+        <button className="md:hidden p-2 transition-transform active:scale-90" onClick={() => setOpen(!open)}>
           {open ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden border-t border-gray-200 bg-white px-4 py-3 flex flex-col gap-1">
+        <div className="md:hidden border-t border-gray-200 bg-white/95 backdrop-blur-md px-4 py-3 flex flex-col gap-1 animate-slide-down origin-top">
           <NavItem to="/" icon={BookOpen} label="Home" />
           <NavItem to="/pdfs" icon={BookOpen} label="PDFs" />
           {user && <NavItem to="/upload" icon={Upload} label="Upload" />}

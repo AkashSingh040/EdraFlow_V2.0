@@ -63,8 +63,8 @@ const UploadPDF = () => {
           onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
           onDragLeave={() => setDragOver(false)}
           onDrop={handleDrop}
-          className={`relative border-2 border-dashed rounded-xl p-10 text-center transition-colors cursor-pointer ${
-            dragOver ? "border-indigo-500 bg-indigo-50" : "border-gray-200 hover:border-indigo-400 hover:bg-gray-50"
+          className={`relative border-2 border-dashed rounded-xl p-10 text-center transition-all cursor-pointer ${
+            dragOver ? "border-indigo-500 bg-indigo-50 shadow-sm" : "border-gray-200 hover:border-indigo-400 hover:bg-gray-50 hover:shadow-sm"
           }`}
           onClick={() => document.getElementById("pdf-input").click()}
         >
@@ -112,7 +112,7 @@ const UploadPDF = () => {
             onChange={handleChange}
             required
             placeholder="e.g. Data Structures Lecture 3"
-            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm shadow-sm transition-shadow focus:shadow-md"
           />
         </div>
 
@@ -125,7 +125,7 @@ const UploadPDF = () => {
             onChange={handleChange}
             rows={3}
             placeholder="Brief description of what this document contains…"
-            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm resize-none"
+            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm resize-none shadow-sm transition-shadow focus:shadow-md"
           />
         </div>
 
@@ -138,7 +138,7 @@ const UploadPDF = () => {
             value={form.tags}
             onChange={handleChange}
             placeholder="e.g. algorithms, year-2, CS (comma-separated)"
-            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm shadow-sm transition-shadow focus:shadow-md"
           />
           <p className="text-xs text-gray-400 mt-1">Separate tags with commas</p>
         </div>
@@ -152,7 +152,7 @@ const UploadPDF = () => {
         <button
           type="submit"
           disabled={loading || !file}
-          className="w-full py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+          className="w-full py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 hover:shadow-md transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
         >
           {loading ? (
             <><Loader2 size={18} className="animate-spin" /> Uploading…</>

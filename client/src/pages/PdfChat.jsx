@@ -36,7 +36,7 @@ const FileChip = ({ name, onRemove, disabled }) => (
 const Message = ({ msg }) => {
   const isBot = msg.role === "assistant";
   return (
-    <div className={`flex gap-3 ${isBot ? "justify-start" : "justify-end"}`}>
+    <div className={`flex gap-3 animate-fade-in-up ${isBot ? "justify-start" : "justify-end"}`}>
       {isBot && (
         <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center flex-shrink-0 mt-0.5">
           <Bot size={16} className="text-white" />
@@ -291,10 +291,10 @@ const PdfChat = () => {
           onDragLeave={onDragLeave}
           onDrop={onDrop}
           onClick={() => fileInputRef.current?.click()}
-          className={`relative border-2 border-dashed rounded-2xl p-6 flex flex-col items-center gap-2 cursor-pointer transition-colors ${
+          className={`relative border-2 border-dashed rounded-2xl p-6 flex flex-col items-center gap-2 cursor-pointer transition-all ${
             isDragging
-              ? "border-indigo-500 bg-indigo-50"
-              : "border-gray-200 bg-gray-50 hover:border-indigo-400 hover:bg-indigo-50/40"
+              ? "border-indigo-500 bg-indigo-50 shadow-sm"
+              : "border-gray-200 bg-gray-50 hover:border-indigo-400 hover:bg-indigo-50/40 hover:shadow-sm"
           }`}
         >
           <Upload
@@ -332,7 +332,7 @@ const PdfChat = () => {
             <button
               onClick={handleUpload}
               disabled={uploading}
-              className="mt-1 w-full py-2 bg-indigo-600 text-white text-sm font-medium rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+              className="mt-1 w-full py-2 bg-indigo-600 text-white text-sm font-medium rounded-xl hover:bg-indigo-700 hover:shadow-md transition-all active:scale-95 disabled:opacity-60 flex items-center justify-center gap-2"
             >
               {uploading ? (
                 <>
@@ -376,7 +376,7 @@ const PdfChat = () => {
           <button
             onClick={handleClearSession}
             disabled={uploading || loading}
-            className="w-full py-2 text-sm text-red-600 border border-red-200 rounded-xl hover:bg-red-50 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full py-2 text-sm text-red-600 border border-red-200 rounded-xl hover:bg-red-50 hover:shadow-sm transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
           >
             <Trash2 size={14} />
             Clear Session
@@ -456,13 +456,13 @@ const PdfChat = () => {
                 : "Ask anything about your documents…"
             }
             disabled={uploadedFiles.length === 0}
-            className="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm resize-none disabled:bg-gray-50 disabled:text-gray-400"
+            className="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm resize-none disabled:bg-gray-50 disabled:text-gray-400 shadow-sm transition-shadow focus:shadow-md"
             style={{ maxHeight: "120px" }}
           />
           <button
             onClick={() => sendMessage()}
             disabled={!input.trim() || loading || uploadedFiles.length === 0}
-            className="px-4 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+            className="px-4 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 hover:shadow-md transition-all active:scale-95 disabled:opacity-50 flex items-center gap-2"
           >
             {loading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
           </button>
