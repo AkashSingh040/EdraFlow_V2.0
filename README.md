@@ -524,7 +524,7 @@ npm run dev
 
 ### All Services at a Glance
 
-| Service | Command | URL | Deployed On |
+| Service | Command | URL on your local deployment | Deployed On for live link |
 |---------|---------|-----|-------------|
 | React Frontend | `npm run dev` (in `/client`) | http://localhost:5173 | Vercel |
 | Express API | `npm run dev` (in `/server`) | http://localhost:5000 | AWS EC2 t2.micro |
